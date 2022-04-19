@@ -109,11 +109,3 @@ data %>%
   head(10) %>% 
   knitr::kable()
 ```
-
-
-```{css echo=FALSE}
-h2 {
-  color: #9EBA89;
-}
-```
-

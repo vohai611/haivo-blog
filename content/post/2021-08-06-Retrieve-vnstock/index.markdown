@@ -98,9 +98,3 @@ ggplotly(acb_plot) |>
 ## Note
 
 `get_cafeF()` have to send multiple requests to cafef.vn, depend on the time frame user specified. Although I use `{furrr}` to send request in parallel but the the speed is much slower compare with `get_vndirect()` which is only send one request.
-
-<style type="text/css">
-h2 {
-  color: #9EBA89;
-}
-</style>

@@ -59,15 +59,4 @@ There are multiple constraint can be add to the app such that:
 Thank you for your reading! If you want to give me any feedback, email me at haingocvo96@gmail.com. 
 
 
-<style type="text/css">
-h3 {
-  font-family: "Raleway";
-}
-
-p {
-  font-family: "Monaco";
-}
-</style>
-
-
 

@@ -141,9 +141,3 @@ Figure 5: Neighbor solution
 </p>
 
 </div>
-
-<style type="text/css">
-h2 {
-  color: #9EBA89;
-}
-</style>
