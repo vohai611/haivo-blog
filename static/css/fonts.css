@@ -1,6 +1,6 @@
 /* raleway-regular - latin */
 @font-face {
-  font-family: 'Raleway';
+  font-family: 'raleway';
   font-style: normal;
   font-weight: 400;
   src: local(''),
@@ -8,5 +8,10 @@
        url('../fonts/raleway-v26-latin-regular.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
 }
 body {
-  font-family: 'Raleway', sans-serif;
+  font-family: 'raleway', sans-serif;
+}
+
+
+h1,h2,h3,code {
+  font-family: 'raleway', sans-serif;
 }
