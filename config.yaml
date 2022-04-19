@@ -1,0 +1,76 @@
+baseurl: https://vohai.xyz/
+title: HAI NGOC VO
+theme: hugo-theme-cleanwhite
+languageCode: en-us
+disqusShortname: ''
+googleAnalytics: ''
+preserveTaxonomyNames: yes
+paginate: 5
+hasCJKLanguage: yes
+ignoreFiles: ["\\.Rmd$", "\\.Rmarkdown$", "_cache$"]
+outputs:
+  home:
+    - HTML
+    - RSS
+    - Algolia
+params:
+  SEOTitle: Haivo 
+  about_me: yes
+  addtional_menus:
+  algolia:
+    params:
+      - categories
+      - tags
+    vars:
+      - title
+      - summary
+      - date
+      - publishdate
+      - expirydate
+      - permalink
+  algolia_apiKey: ''
+  algolia_appId: ''
+  algolia_indexName: ''
+  algolia_search: false
+  ba_track_id: ''
+  bookmark_link:
+  bookmarks: no
+  description: 
+  disqus_proxy: ''
+  disqus_site: ''
+  featured_condition_size: 1
+  featured_tags: yes
+  friend_link:
+    - href: 
+      title:
+  friends: yes
+  header_image: img/blog-cover.jpg
+  image_404: img/404-bg.jpg
+  keyword:
+  page_view_conter: no
+  #reward: yes
+  sidebar_about_description: Contact Me
+  sidebar_avatar: 
+  slogan: Coding, all and all again!
+  social:
+    email: haingocvo96@gmail.com
+    github: https://github.com/vohai611
+    linkedin: https://www.linkedin.com/in/yourlinkedinid
+  title_404: Not Found :(
+  twikoo_env_id: ''
+outputFormats:
+  Algolia:
+    baseName: algolia
+    isPlainText: yes
+    mediaType: application/json
+    notAlternative: yes
+markup:
+  highlight:
+    style: dracula
+  tableOfContents:
+    endLevel: 2
+    startLevel: 1
+    # need gold mark to be able to include R outpu in .markdown
+  goldmark:
+    renderer:
+      unsafe: true

@@ -1,0 +1,119 @@
+---
+title: Scrape university entrance exam score
+summary: Using {rvest} and {furrr} to scrape exam score in parallel
+cover: 
+  image: "cover.png"
+  caption: Density plot by subject score (2021)
+author: Hai Vo
+date: '2021-08-06'
+slug: []
+categories: []
+tags: [API, httr]
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE, cache = TRUE)
+```
+
+## Why
+
+University entrance exam is one of the most important exam of every Vietnamese student. In the year of 2020, by analyzing exam score, people discover abnormal data point and then detect a serious cheating. 
+The full data is normally not public by the Education Department. However, anyone could get the exam result through multiple website by fill in correct candidate ID.
+This post present how to use R to send API request to retrieve full exam score in the whole country in 2021. The full script and data could be found at my github [repository](https://github.com/vohai611/diemthi-thpt-2021). 
+
+## How does it work
+There are several website provide web interface to get the score. In my script, I use two sources of data:
+https://diemthi.vnanet.vn and https://tienphong.vn/tra-cuu-diem-thi.tpo.
+
+Under the hood, these two website use API to retrieve the data, and user can access this API request directly via web browser devtools (network tab). The API from vnanet.vn is quite slow and only allow to retrieve 1 result per request. On the other hand, tienphong.vn allows user to get a maximum of 300 result per request, hence I decide to use the latter options to get the whole data.
+
+These two API take the student ID as input and provide full result of that student as output. Input are in the form {province_code}{student_id}. Province_code vary from 01 to 64, while the student_id are from 1 to the max number of student attend in the exam. For example, input = '01000001' is for student 1 from the province that had code 01 (Ha Noi).
+
+
+## Demonstration
+Option 1:
+```{r}
+library(tidyverse)
+library(glue)
+library(httr)
+library(here)
+get_score <- function(sbd) {
+  url <- glue("https://diemthi.vnanet.vn/Home/SearchBySobaodanh?code={ sbd }&nam=2021")
+  GET(url) %>% 
+    content(type = 'text', encoding = 'UTF-8') %>% 
+    jsonlite::fromJSON() %>% 
+    .[['result']] %>% 
+    as_tibble()
+}
+
+get_score('01000001') %>% 
+  knitr::kable()
+```
+
+Option 2:
+In this API options, I can use sbd = '0100001' to get the result of 10 attendance in one request from 01000011 to 01000019
+```{r}
+get_score2 <- function(sbd){
+  
+  # prepare URL
+  url <- glue('https://tienphong.vn/api/diemthi/get/result?type=0&keyword={ sbd }&kythi=THPT&nam=2021&cumthi=0')
+  ## send request
+  a <- GET(url,
+           add_headers('referer'= 'https://tienphong.vn/tra-cuu-diem-thi.tpo')
+  ) %>% 
+    content(as = 'text') %>% 
+    jsonlite::fromJSON()
+  
+  # parse request to text format
+  a$data$results %>% 
+    rvest::read_html() %>% 
+    rvest::html_text2() %>% 
+    return()
+}
+
+# data received in the form of TSV:
+get_score2('0100001') %>% 
+  data.table::fread() %>% 
+  knitr::kable()
+```
+
+In the script, I also exploit multi-core in my machine (4-cores) to send multiple request simultaneously by using `{furrr}` package (front-end to the `{future}` package). The use of parallel code yield around 3 times faster result (60 mins for nearly 1 millions result) compare with normal use.
+
+Because the API sent me the province code instead of province name, I will need an extra step to get the province.
+
+```{r}
+library(rvest)
+province_code <- read_html("https://diemthi.vnanet.vn/Home/") %>% 
+  html_elements("#listCity") %>% 
+  html_text2() %>% 
+  str_replace_all(pattern = "(\\d{2})", "\n\\1, ") %>% 
+  read_csv(skip = 1, col_names = c('province_code', 'province')) %>% 
+  mutate(province = stringi::stri_trans_general(province, "Latin-ASCII")) %>% 
+  mutate(province = str_remove(province, 'So GDDT '),
+         province = str_remove(province, "So GD KHCN "))
+
+province_code
+```
+
+Finally I just need to join to data sets, this is what final result look like:
+
+```{r}
+here::i_am("content/project/2021-08-06-diem-thi-thpt/index.markdown")
+path <- "content/project/2021-08-06-diem-thi-thpt"
+
+data <- read_rds(here(path, "data/output.rds"))
+
+data %>% 
+  left_join(province_code) %>% 
+  head(10) %>% 
+  knitr::kable()
+```
+
+
+```{css echo=FALSE}
+h2 {
+  color: #9EBA89;
+}
+```
+

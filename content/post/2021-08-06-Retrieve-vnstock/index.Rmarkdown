@@ -1,0 +1,81 @@
+---
+title: An R package to retrieve Vietnam stock data
+summary: Make API request to get stock data from vndirect.com.vn and cafef.vn
+cover:
+  image: "cover.jpg"
+author: Hai Vo
+date: '2021-08-06'
+slug: []
+categories: [Project]
+tags: [stock, httr, furrr, crul]
+---
+```{r setup, include=FALSE} 
+knitr::opts_chunk$set(cache = TRUE, warning = FALSE, message = FALSE)
+```
+
+## Update 10-2021
+
+I just update the function `get_cefeF2()` which using async request (from {crul} package). The new function seem to be twice as fast compare with the old `get_cafeF()`.
+
+```{r}
+system.time(
+  vnstockr::get_cafeF2("ACB", "1/1/2020", "1/1/2021")
+)
+```
+
+
+
+
+## Why
+It is convenience to import stock data directly into R because there are multiple advance tools in R allow you to analyzing or run machine learning model with time series such as `{modeltime}` `{fable}`.
+
+The`{tidyquant}` package made it simple by let user get stock data in Yahoo Finance to R in the "tidy" format. However, most of Vietnamese company does not listed in Yahoo Finance, hence user must manually download the data and import it into R before take advantage of R packages.
+
+To automate this boring task, I write a simple package that allow user to get the Vietnam stock data from cafef.vn and vndirect.com.vn. This package is the wrap around of `{httr}` package which send request to these two data sources and parse the respond to R data frame (tibble). 
+
+You can browse the package source code [here](https://github.com/vohai611/vnstockr)
+
+## Install
+
+To install this package, use:
+```{r, eval=FALSE}
+devtools::install_github("https://github.com/vohai611/vnstockr")
+```
+
+## Usage
+This package only contain two function `get_cafeF()` and `get_vndirect()`. User just need to specify stock code (symbol) and time frame. For example:
+```{r}
+library(vnstockr)
+acb <- get_vndirect('ACB', '1/5/2020', '1/5/2021')
+acb |>
+  head(5) 
+```
+
+Data retrieve are in the same "tidy" format as `{tidyquant}` package and could easily integrate with other R package quickly. For example, data could be visualized with `ggplot2`:
+
+```{r}
+library(ggplot2)
+library(plotly)
+acb_plot <- acb |>
+  ggplot(aes(date, close))+
+  geom_line()+
+  scale_x_date(date_breaks = "4 weeks")+
+  theme_light()+
+  theme(axis.text.x = element_text(angle = 45, hjust =1))+
+  expand_limits(y = 0)+
+  labs(title = "ACB stock price from 1/5/2020 to 1/5/2021\n", x= NULL)
+
+ggplotly(acb_plot) |>
+  config(displayModeBar = FALSE)
+```
+
+
+##  Note
+`get_cafeF()` have to send multiple requests to cafef.vn, depend on the time frame user specified. Although I use `{furrr}` to send request in parallel but the the speed is much slower compare with `get_vndirect()` which is only send one request.
+
+```{css echo=FALSE}
+h2 {
+  color: #9EBA89;
+}
+```
+
