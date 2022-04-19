@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:site_name" content="HAI NGOC VO">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="https://haingocvo.netlify.app//img/blog-cover.jpg">
+    <meta property="twitter:image" content="https://haingocvo.netlify.app//img/blog-cover.jpg" />
+    
+
+    
+    <meta name="title" content="Visualizing population growth rate" />
+    <meta property="og:title" content="Visualizing population growth rate" />
+    <meta property="twitter:title" content="Visualizing population growth rate" />
+    
+
+    
+    <meta name="description" content="Visulizing population growth rate using half-eye plot">
+    <meta property="og:description" content="Visulizing population growth rate using half-eye plot" />
+    <meta property="twitter:description" content="Visulizing population growth rate using half-eye plot" />
+    
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>Visualizing population growth rate-Haivo</title>
+
+    <link rel="canonical" href="/post/2022-04-19-visualizing-population-growth-rate/">
+
+    
+    
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hugo-theme-cleanwhite.min.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.css">
+
+    
+    <link href="https://cdn.jsdelivr.net/gh/FortAwesome/Font-Awesome@5.15.1/css/all.css" rel="stylesheet" type="text/css">
+
+    
+    
+
+    
+    <script src="/js/jquery.min.js"></script>
+
+    
+    <script src="/js/bootstrap.min.js"></script>
+
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    
+
+</head>
+
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">HAI NGOC VO</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">All Posts</a>
+                    </li>
+                    
+                        
+                        <li>
+                            <a href="/categories/project">project</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/viz">viz</a>
+                        </li>
+                        
+                    
+                    
+		    
+
+                    
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/img/blog-cover.jpg')
+    }
+</style>
+
+<header class="intro-header" >
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                    </div>
+                    <h1>Visualizing population growth rate</h1>
+                    <h2 class="subheading"></h2>
+                    <span class="meta">
+                        
+                            Posted by 
+                            
+                                Hai Vo
+                             
+                            on 
+                            Tuesday, April 19, 2022
+                            
+                            
+                            
+                            
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <h2 id="get-the-data">Get the data</h2>
+<p>Data came from <a href="https://gso.gov.vn">Vietnam general statistic organization</a>
+To be able to easily get the data from R. I build a simple package <a href="https://github.com/vohai611/gsovn"><code>gsovn</code></a> to scrape data from their website.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#50fa7b">library</span>(tidyverse)
+</span></span></code></pre></div><pre tabindex="0"><code>## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──
+</code></pre><pre tabindex="0"><code>## ✓ ggplot2 3.3.5     ✓ purrr   0.3.4
+## ✓ tibble  3.1.6     ✓ dplyr   1.0.8
+## ✓ tidyr   1.2.0     ✓ stringr 1.4.0
+## ✓ readr   2.1.2     ✓ forcats 0.5.1
+</code></pre><pre tabindex="0"><code>## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()
+</code></pre><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>data <span style="color:#ff79c6">=</span> gsovn<span style="color:#ff79c6">::</span><span style="color:#50fa7b">gso_read</span>(gsovn<span style="color:#ff79c6">::</span>avail_dataset<span style="color:#ff79c6">$</span>link[30])
+</span></span></code></pre></div><h2 id="clean">clean</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>df <span style="color:#ff79c6">=</span> data<span style="color:#ff79c6">$</span>data
+</span></span><span style="display:flex;"><span>df <span style="color:#ff79c6">=</span> df <span style="color:#ff79c6">%&gt;%</span> <span style="color:#50fa7b">rename</span>(region <span style="color:#ff79c6">=</span><span style="color:#bd93f9">1</span>) <span style="color:#ff79c6">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#50fa7b">mutate</span>(region<span style="color:#ff79c6">=</span> <span style="color:#50fa7b">str_squish</span>(region))
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>region <span style="color:#ff79c6">=</span> <span style="color:#50fa7b">c</span>(
+</span></span><span style="display:flex;"><span>  <span style="color:#f1fa8c">&#34;WHOLE COUNTRY&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f1fa8c">&#34;Northern midlands and mountain areas&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f1fa8c">&#34;Red River Delta&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f1fa8c">&#34;Northern Central area and Central coastal area&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f1fa8c">&#34;Central Highlands&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f1fa8c">&#34;South East&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f1fa8c">&#34;Mekong River Delta&#34;</span> 
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>region_regex <span style="color:#ff79c6">=</span> <span style="color:#50fa7b">paste0</span>(<span style="color:#f1fa8c">&#34;(&#34;</span>,<span style="color:#50fa7b">str_c</span>(region, collapse <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;|&#34;</span>),<span style="color:#f1fa8c">&#34;)&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>df <span style="color:#ff79c6">=</span> df <span style="color:#ff79c6">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#50fa7b">mutate</span>(<span style="color:#50fa7b">across</span>(<span style="color:#ff79c6">-</span>region, as.numeric)) <span style="color:#ff79c6">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#50fa7b">mutate</span>(group <span style="color:#ff79c6">=</span> <span style="color:#50fa7b">cumsum</span>(<span style="color:#50fa7b">str_detect</span>(region, region_regex))) <span style="color:#ff79c6">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#50fa7b">group_by</span>(group) <span style="color:#ff79c6">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#50fa7b">mutate</span>(group <span style="color:#ff79c6">=</span> <span style="color:#50fa7b">first</span>(region)) <span style="color:#ff79c6">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#50fa7b">ungroup</span>()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>df_long <span style="color:#ff79c6">=</span> df <span style="color:#ff79c6">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#50fa7b">pivot_longer</span>(cols <span style="color:#ff79c6">=</span> <span style="color:#50fa7b">c</span>(<span style="color:#ff79c6">-</span>region, <span style="color:#ff79c6">-</span>group),names_to <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#39;year&#39;</span>, values_to <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;pop_growth_rate&#34;</span>)
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#50fa7b">library</span>(sf)
+</span></span></code></pre></div><pre tabindex="0"><code>## Linking to GEOS 3.8.0, GDAL 3.0.4, PROJ 6.3.1; sf_use_s2() is TRUE
+</code></pre><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#50fa7b">library</span>(ggrepel)
+</span></span><span style="display:flex;"><span><span style="color:#50fa7b">theme_set</span>(<span style="color:#50fa7b">theme_light</span>())
+</span></span><span style="display:flex;"><span>vn_sf <span style="color:#ff79c6">=</span> haitools<span style="color:#ff79c6">::</span>small_vnsf
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># fix thua thien hue, tp ho chi minh name</span>
+</span></span><span style="display:flex;"><span>df_long <span style="color:#ff79c6">=</span> df_long <span style="color:#ff79c6">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#50fa7b">mutate</span>(region <span style="color:#ff79c6">=</span> <span style="color:#50fa7b">case_when</span>(region <span style="color:#ff79c6">==</span> <span style="color:#f1fa8c">&#34;Thua Thien-Hue&#34;</span> <span style="color:#ff79c6">~</span> <span style="color:#f1fa8c">&#34;Thua Thien Hue&#34;</span>,
+</span></span><span style="display:flex;"><span>                            region <span style="color:#ff79c6">==</span> <span style="color:#f1fa8c">&#34;Ho Chi Minh city&#34;</span> <span style="color:#ff79c6">~</span> <span style="color:#f1fa8c">&#34;Ho Chi Minh&#34;</span>,
+</span></span><span style="display:flex;"><span>                            <span style="color:#ff79c6">TRUE</span> <span style="color:#ff79c6">~</span> region))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>a <span style="color:#ff79c6">=</span> <span style="color:#50fa7b">map</span>(vn_sf<span style="color:#ff79c6">$</span>geometry, <span style="color:#ff79c6">~</span> <span style="color:#50fa7b">colMeans</span>(<span style="color:#50fa7b">chuck</span>(.x,<span style="color:#bd93f9">1</span>,<span style="color:#bd93f9">1</span>))) 
+</span></span><span style="display:flex;"><span>coord_x <span style="color:#ff79c6">=</span> <span style="color:#50fa7b">map_dbl</span>(a, <span style="color:#bd93f9">1</span>)
+</span></span><span style="display:flex;"><span>coord_y <span style="color:#ff79c6">=</span> <span style="color:#50fa7b">map_dbl</span>(a,<span style="color:#bd93f9">2</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>vn_sf <span style="color:#ff79c6">=</span> vn_sf <span style="color:#ff79c6">%&gt;%</span> <span style="color:#50fa7b">mutate</span>(coord_x <span style="color:#ff79c6">=</span> coord_x, coord_y <span style="color:#ff79c6">=</span> coord_y)
+</span></span></code></pre></div><p>How to use fct_reorder2(.f, .x, .y, .fun)</p>
+<pre tabindex="0"><code class="language-{r}How" data-lang="{r}How">
+```r
+df_long %&gt;% 
+  filter(!region %in% .env$region[-1]) %&gt;% 
+  group_by(group, year) %&gt;% 
+  summarise(mean = mean(pop_growth_rate, na.rm =TRUE), n = n()) %&gt;% 
+  ungroup() %&gt;% 
+  mutate(group = paste0(group, &#34; (&#34;, n, &#34;)&#34;)) %&gt;% 
+  mutate(group = fct_reorder2(group, year, mean)) %&gt;% 
+  ggplot(aes(year, mean, color = group, group = group))+
+  geom_point()+
+  geom_line()
+</code></pre><pre tabindex="0"><code>## `summarise()` has grouped output by &#39;group&#39;. You can override using the
+## `.groups` argument.
+</code></pre><img src="https://haingocvo.netlify.app/post/2022-04-19-visualizing-population-growth-rate/index_files/figure-html/unnamed-chunk-5-1.png" width="1152" />
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>df_count_group <span style="color:#ff79c6">=</span> df_long <span style="color:#ff79c6">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#50fa7b">filter</span>(<span style="color:#ff79c6">!</span>region <span style="color:#ff79c6">%in%</span> .env<span style="color:#ff79c6">$</span>region) <span style="color:#ff79c6">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#50fa7b">filter</span>(year <span style="color:#ff79c6">==</span> <span style="color:#bd93f9">2019</span>) <span style="color:#ff79c6">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#50fa7b">count</span>(group)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>df_by_group <span style="color:#ff79c6">=</span> df_long <span style="color:#ff79c6">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#50fa7b">filter</span>(<span style="color:#ff79c6">!</span>region <span style="color:#ff79c6">%in%</span> .env<span style="color:#ff79c6">$</span>region) <span style="color:#ff79c6">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#50fa7b">left_join</span>(df_count_group, by <span style="color:#ff79c6">=</span> <span style="color:#50fa7b">c</span>(<span style="color:#f1fa8c">&#34;group&#34;</span><span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;group&#34;</span>)) <span style="color:#ff79c6">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#50fa7b">mutate</span>(group <span style="color:#ff79c6">=</span> <span style="color:#50fa7b">fct_relevel</span>(group, .env<span style="color:#ff79c6">$</span>region[<span style="color:#bd93f9">-1</span>])) 
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>df_by_group_n <span style="color:#ff79c6">=</span> df_by_group <span style="color:#ff79c6">%&gt;%</span> <span style="color:#50fa7b">distinct</span>(group, n) <span style="color:#ff79c6">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#50fa7b">mutate</span>(new_name <span style="color:#ff79c6">=</span> <span style="color:#50fa7b">paste0</span>(group, <span style="color:#f1fa8c">&#34; (n=&#34;</span>, n, <span style="color:#f1fa8c">&#34;)&#34;</span>))
+</span></span><span style="display:flex;"><span>new_name <span style="color:#ff79c6">=</span> df_by_group_n<span style="color:#ff79c6">$</span>new_name
+</span></span><span style="display:flex;"><span><span style="color:#50fa7b">names</span>(new_name) <span style="color:#ff79c6">=</span> df_by_group_n<span style="color:#ff79c6">$</span>group
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>df_by_group <span style="color:#ff79c6">=</span> df_by_group <span style="color:#ff79c6">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#50fa7b">mutate</span>(group <span style="color:#ff79c6">=</span> <span style="color:#50fa7b">fct_relabel</span>(group, <span style="color:#ff79c6">~</span>new_name[.] ))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>df_whole <span style="color:#ff79c6">=</span> df_long <span style="color:#ff79c6">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#50fa7b">filter</span>(region <span style="color:#ff79c6">==</span> <span style="color:#f1fa8c">&#34;WHOLE COUNTRY&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>df_whole2 <span style="color:#ff79c6">=</span> df_whole <span style="color:#ff79c6">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#50fa7b">mutate</span>(group <span style="color:#ff79c6">=</span> <span style="color:#50fa7b">map</span>(region, <span style="color:#ff79c6">~</span><span style="color:#50fa7b">unique</span>(df_by_group<span style="color:#ff79c6">$</span>group))) <span style="color:#ff79c6">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#50fa7b">unnest</span>(group)
+</span></span></code></pre></div><p>Viet nam map by region</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>p1 <span style="color:#ff79c6">=</span> df_long <span style="color:#ff79c6">%&gt;%</span>  
+</span></span><span style="display:flex;"><span>  <span style="color:#50fa7b">distinct</span>(region,group) <span style="color:#ff79c6">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#50fa7b">mutate</span>(group <span style="color:#ff79c6">=</span> <span style="color:#50fa7b">fct_relevel</span>(group, .env<span style="color:#ff79c6">$</span>region[<span style="color:#bd93f9">-1</span>] )) <span style="color:#ff79c6">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#50fa7b">inner_join</span>(vn_sf, by <span style="color:#ff79c6">=</span> <span style="color:#50fa7b">c</span>(region <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;province&#34;</span>)) <span style="color:#ff79c6">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#50fa7b">ggplot</span>(<span style="color:#50fa7b">aes</span>(geometry <span style="color:#ff79c6">=</span> geometry, fill <span style="color:#ff79c6">=</span> group))<span style="color:#ff79c6">+</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#50fa7b">geom_sf</span>(color<span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;white&#34;</span>, alpha <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">.5</span>)<span style="color:#ff79c6">+</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#50fa7b">guides</span>(fill <span style="color:#ff79c6">=</span> <span style="color:#50fa7b">guide_legend</span>(ncol <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">1</span>))<span style="color:#ff79c6">+</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#50fa7b">theme_void</span>()<span style="color:#ff79c6">+</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#50fa7b">labs</span>(fill <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;&#34;</span>)<span style="color:#ff79c6">+</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#6272a4">#geom_text_repel(aes(x = coord_x, y = coord_y, label = region),max.overlaps = 20, size = 3)</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#50fa7b">theme</span>(legend.position <span style="color:#ff79c6">=</span><span style="color:#50fa7b">c</span>(<span style="color:#bd93f9">0.4</span>,<span style="color:#bd93f9">0.35</span>), text <span style="color:#ff79c6">=</span> <span style="color:#50fa7b">element_text</span>(size <span style="color:#ff79c6">=</span><span style="color:#bd93f9">16</span>))
+</span></span><span style="display:flex;"><span>p1
+</span></span></code></pre></div><img src="https://haingocvo.netlify.app/post/2022-04-19-visualizing-population-growth-rate/index_files/figure-html/unnamed-chunk-7-1.png" width="1152" />
+<p>Distribution of population growth rate</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>p2 <span style="color:#ff79c6">=</span> df_by_group <span style="color:#ff79c6">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#50fa7b">ggplot</span>(<span style="color:#50fa7b">aes</span>(year, pop_growth_rate, group <span style="color:#ff79c6">=</span> group, fill <span style="color:#ff79c6">=</span> group))<span style="color:#ff79c6">+</span>
+</span></span><span style="display:flex;"><span>  ggdist<span style="color:#ff79c6">::</span><span style="color:#50fa7b">stat_halfeye</span>(alpha <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">.7</span>)<span style="color:#ff79c6">+</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#50fa7b">geom_line</span>(data <span style="color:#ff79c6">=</span> df_whole2,
+</span></span><span style="display:flex;"><span>            <span style="color:#50fa7b">aes</span>(year, pop_growth_rate, group <span style="color:#ff79c6">=</span> region),
+</span></span><span style="display:flex;"><span>            linetype <span style="color:#ff79c6">=</span><span style="color:#bd93f9">2</span>, 
+</span></span><span style="display:flex;"><span>            inherit.aes <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">FALSE</span>) <span style="color:#ff79c6">+</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#50fa7b">facet_wrap</span>( <span style="color:#ff79c6">~</span> group, scales <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;free&#34;</span>,ncol <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">2</span>) <span style="color:#ff79c6">+</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#50fa7b">guides</span>(fill <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;none&#34;</span>) <span style="color:#ff79c6">+</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#50fa7b">scale_y_continuous</span>(labels <span style="color:#ff79c6">=</span> scales<span style="color:#ff79c6">::</span><span style="color:#50fa7b">percent_format</span>(scale <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">1</span>)) <span style="color:#ff79c6">+</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#50fa7b">theme</span>(panel.grid.major.x <span style="color:#ff79c6">=</span> <span style="color:#50fa7b">element_blank</span>(),
+</span></span><span style="display:flex;"><span>        panel.grid.minor.x <span style="color:#ff79c6">=</span> <span style="color:#50fa7b">element_blank</span>(),
+</span></span><span style="display:flex;"><span>        strip.background <span style="color:#ff79c6">=</span> <span style="color:#50fa7b">element_rect</span>(fill <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;#9eba89&#34;</span>),
+</span></span><span style="display:flex;"><span>        strip.text <span style="color:#ff79c6">=</span> <span style="color:#50fa7b">element_text</span>(colour <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;#2d3443&#34;</span>, size <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">18</span>),
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4">#plot.background = element_rect(fill = &#34;grey80&#34;),</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4">#panel.background = element_rect(fill =&#34;grey80&#34;),</span>
+</span></span><span style="display:flex;"><span>        text <span style="color:#ff79c6">=</span> <span style="color:#50fa7b">element_text</span>(size<span style="color:#ff79c6">=</span> <span style="color:#bd93f9">18</span>)) <span style="color:#ff79c6">+</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#50fa7b">labs</span>(
+</span></span><span style="display:flex;"><span>    y <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">NULL</span>,
+</span></span><span style="display:flex;"><span>    x <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">NULL</span>
+</span></span><span style="display:flex;"><span>  )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>p2
+</span></span></code></pre></div><img src="https://haingocvo.netlify.app/post/2022-04-19-visualizing-population-growth-rate/index_files/figure-html/unnamed-chunk-8-1.png" width="1152" />
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#50fa7b">library</span>(patchwork)
+</span></span><span style="display:flex;"><span><span style="color:#50fa7b">library</span>(ggtext)
+</span></span><span style="display:flex;"><span>p <span style="color:#ff79c6">=</span> p1 <span style="color:#ff79c6">+</span> p2 <span style="color:#ff79c6">+</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#50fa7b">plot_annotation</span>(
+</span></span><span style="display:flex;"><span>    title <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;Distribution of population growth rate group by area, from 2005 to 2020&#34;</span>,
+</span></span><span style="display:flex;"><span>    subtitle <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;**(n)** is number of provinces in each group &lt;br/&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">                  *Dash-line* is the average of whole country&#34;</span>,
+</span></span><span style="display:flex;"><span>    theme <span style="color:#ff79c6">=</span> <span style="color:#50fa7b">theme</span>(
+</span></span><span style="display:flex;"><span>      plot.title <span style="color:#ff79c6">=</span> <span style="color:#50fa7b">element_markdown</span>(size <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">22</span>),
+</span></span><span style="display:flex;"><span>      plot.subtitle <span style="color:#ff79c6">=</span> <span style="color:#50fa7b">element_markdown</span>(size <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">18</span>),
+</span></span><span style="display:flex;"><span>      plot.background <span style="color:#ff79c6">=</span> <span style="color:#50fa7b">element_rect</span>(fill <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;grey80&#34;</span>),
+</span></span><span style="display:flex;"><span>    )
+</span></span><span style="display:flex;"><span>  )
+</span></span></code></pre></div><p>To save out images, use <code>ggsave()</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>knitr<span style="color:#ff79c6">::</span><span style="color:#50fa7b">include_graphics</span>(<span style="color:#f1fa8c">&#34;Dist-of-pop-growth.png&#34;</span>)
+</span></span></code></pre></div><img src="Dist-of-pop-growth.png" width="4400" />
+
+
+                
+
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/post/2021-09-26-schedule-optimize-app-by-r-shiny/" data-toggle="tooltip" data-placement="top" title="Schedule optimize app by R shiny">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                </ul>
+                
+
+            </div>
+
+            
+            
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+            
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/httr" title="httr">
+                            httr
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/shiny" title="shiny">
+                            shiny
+                        </a>
+                        
+                        
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+                <section>
+                    <hr>
+                    <h5>FRIENDS</h5>
+                    <ul class="list-inline">
+                        
+                        <li><a target="_blank" href=""></a></li>
+                        
+                    </ul>
+                </section>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">                  
+                    
+                    <li>
+                        <a href="mailto:haingocvo96@gmail.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		           
+                    
+                    
+                    
+                    
+
+		            
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/vohai611">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		            
+                    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://www.linkedin.com/in/yourlinkedinid">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		           
+                    
+                    
+                    
+                    
+                    
+                    
+            
+            
+            
+           
+             </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; HAI NGOC VO 2022
+                    <br>
+                    <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=zhaohuabing&repo=hugo-theme-cleanwhite&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function loadAsync(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        loadAsync("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    loadAsync("https://cdn.jsdelivr.net/npm/fastclick@1.0.6/lib/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+    function generateCatalog(selector) {
+
+        
+        
+        
+        
+            _containerSelector = 'div.post-container'
+        
+
+        
+        var P = $(_containerSelector), a, n, t, l, i, c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+
+        
+        $(selector).html('')
+
+        
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#" + $(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="' + i + '" rel="nofollow">' + t + '</a>');
+            l = $('<li class="' + n + '_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;
+    }
+
+    generateCatalog(".catalog-body");
+
+    
+    $(".catalog-toggle").click((function (e) {
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    
+
+
+    loadAsync("\/js\/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+</body>
+</html>

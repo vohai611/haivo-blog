@@ -60,13 +60,12 @@ Thank you for your reading! If you want to give me any feedback, email me at hai
 
 
 <style type="text/css">
-h2 {
-  color: #9EBA89;
-  font-family: "comic-sans";
+h3 {
+  font-family: "Raleway";
 }
 
 p {
-  font-family: "monaco";
+  font-family: "Monaco";
 }
 </style>
 

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Project on HAI NGOC VO</title>
+    <link>https://haingocvo.netlify.app/categories/project/</link>
+    <description>Recent content in Project on HAI NGOC VO</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 26 Sep 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://haingocvo.netlify.app/categories/project/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Schedule optimize app by R shiny</title>
+      <link>https://haingocvo.netlify.app/post/2021-09-26-schedule-optimize-app-by-r-shiny/</link>
+      <pubDate>Sun, 26 Sep 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://haingocvo.netlify.app/post/2021-09-26-schedule-optimize-app-by-r-shiny/</guid>
+      <description>Customizable web app to optimize schedule working shifts</description>
+    </item>
+    
+    <item>
+      <title>An R package to retrieve Vietnam stock data</title>
+      <link>https://haingocvo.netlify.app/post/2021-08-06-retrieve-vnstock/</link>
+      <pubDate>Fri, 06 Aug 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://haingocvo.netlify.app/post/2021-08-06-retrieve-vnstock/</guid>
+      <description>Make API request to get stock data from vndirect.com.vn and cafef.vn</description>
+    </item>
+    
+    <item>
+      <title>Vietnam statistic dashboard with R</title>
+      <link>https://haingocvo.netlify.app/post/2021-08-06-vietnam-statistic-dashboard-with-r/</link>
+      <pubDate>Fri, 06 Aug 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://haingocvo.netlify.app/post/2021-08-06-vietnam-statistic-dashboard-with-r/</guid>
+      <description>Cleanning, visualizing Vietnamese statistic data</description>
+    </item>
+    
+  </channel>
+</rss>
