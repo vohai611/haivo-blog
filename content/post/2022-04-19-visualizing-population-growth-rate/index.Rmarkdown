@@ -20,21 +20,27 @@ knitr::opts_chunk$set(echo = TRUE,message = FALSE, warning = FALSE, dev = "ragg_
 Data came from [Vietnam general statistic organization](https://gso.gov.vn)
 To be able to easily get the data from R. I build a simple package [`gsovn`](https://github.com/vohai611/gsovn) to scrape data from their website.
 
-
 ```{r}
 library(tidyverse)
 data = gsovn::gso_read(gsovn::avail_dataset$link[30])
+data$data %>%
+  head(10) %>% 
+  knitr::kable()
 ```
 
+This dataset contain data of population growth (by percent) in Vietnam. The data is quite in a good a shape, but still need some cleaning
 
-## clean
+## Cleaning
+
+First I need to remove white space from province/city name.
 
 ```{r}
 df = data$data
 df = df %>% rename(region =1) %>% 
-  mutate(region= str_squish(region))
+  mutate(region = str_squish(region))
 ```
 
+Next I split up province/city by region it belong to.
 
 ```{r}
 
@@ -57,12 +63,21 @@ df = df %>%
   group_by(group) %>% 
   mutate(group = first(region)) %>% 
   ungroup()
+```
 
+Then pivoting data to long format
+
+```{r}
 df_long = df %>% 
   pivot_longer(cols = c(-region, -group),names_to = 'year', values_to = "pop_growth_rate")
   
+head(df_long,5) %>% 
+  knitr::kable()
 ```
 
+## Prepare data for visualization
+
+I want the audience know which province/city belong to which region, so first, I need the map data of Vietnam split by regions. This is quite common task for me, so I saved the map to my personal pacakge [`{haitools}`](https://github.com/vohai611/haitools), and load from it when I need.
 
 ```{r}
 library(sf)
@@ -83,22 +98,24 @@ coord_y = map_dbl(a,2)
 vn_sf = vn_sf %>% mutate(coord_x = coord_x, coord_y = coord_y)
 ```
 
+Viet nam map by region 
 
-How to use fct_reorder2(.f, .x, .y, .fun)
 ```{r}
-df_long %>% 
-  filter(!region %in% .env$region[-1]) %>% 
-  group_by(group, year) %>% 
-  summarise(mean = mean(pop_growth_rate, na.rm =TRUE), n = n()) %>% 
-  ungroup() %>% 
-  mutate(group = paste0(group, " (", n, ")")) %>% 
-  mutate(group = fct_reorder2(group, year, mean)) %>% 
-  ggplot(aes(year, mean, color = group, group = group))+
-  geom_point()+
-  geom_line()
+p1 = df_long %>%  
+  distinct(region,group) %>% 
+  mutate(group = fct_relevel(group, .env$region[-1] )) %>% 
+  inner_join(vn_sf, by = c(region = "province")) %>% 
+  ggplot(aes(geometry = geometry, fill = group))+
+  geom_sf(color= "white", alpha = .5)+
+  guides(fill = guide_legend(ncol = 1))+
+  theme_void()+
+  labs(fill = "")+
+  #geom_text_repel(aes(x = coord_x, y = coord_y, label = region),max.overlaps = 20, size = 3)
+  theme(legend.position =c(0.4,0.35), text = element_text(size =16))
+p1
 ```
 
-
+Next, I visualizing the distribution of growth rate for each region. There are a interesting package `{ggdist}` which draw half-eye plot for distribution, compare with the typical boxplot or violin-plot. 
 
 ```{r}
 
@@ -129,26 +146,6 @@ df_whole2 = df_whole %>%
   unnest(group)
 ```
 
-
-Viet nam map by region 
-
-```{r}
-p1 = df_long %>%  
-  distinct(region,group) %>% 
-  mutate(group = fct_relevel(group, .env$region[-1] )) %>% 
-  inner_join(vn_sf, by = c(region = "province")) %>% 
-  ggplot(aes(geometry = geometry, fill = group))+
-  geom_sf(color= "white", alpha = .5)+
-  guides(fill = guide_legend(ncol = 1))+
-  theme_void()+
-  labs(fill = "")+
-  #geom_text_repel(aes(x = coord_x, y = coord_y, label = region),max.overlaps = 20, size = 3)
-  theme(legend.position =c(0.4,0.35), text = element_text(size =16))
-p1
-```
-
-Distribution of population growth rate
-
 ```{r}
 p2 = df_by_group %>% 
   ggplot(aes(year, pop_growth_rate, group = group, fill = group))+
@@ -175,6 +172,7 @@ p2 = df_by_group %>%
 p2
 ```
 
+At last, I combine two plot with `{patchwork}`
 
 ```{r}
 library(patchwork)

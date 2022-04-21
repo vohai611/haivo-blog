@@ -27,12 +27,17 @@ h2,h3 {
   font-family: 'Raleway', monospace;
   font-size: 35px;
 }
-code {
+
+.language-r  {
+  font-size: 16px;
   font-family: "Monaco";
-  font-size: 22px;
 }
 
 .post-title {
   color: black;
+}
+
+#huxblog_navbar a {
+  font-size: 20px;
 }
 

@@ -1,14 +1,11 @@
 ---
 title: Capacitated Vehicle Routing Problem
 summary: Solving, visualizing VRP using meta-heuristic algorithm
-cover:
-  image: "cover.png"
 author: Hai Vo
 date: '2021-10-20'
 slug: []
 categories: [Project]
 tags: [VRP, shiny, Optimization]
-draft: true
 ---
 
 <script src="{{< blogdown/postref >}}index_files/htmlwidgets/htmlwidgets.js"></script>
