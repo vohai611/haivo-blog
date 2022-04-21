@@ -6,7 +6,7 @@ author: Hai Vo
 date: '2021-08-06'
 slug: []
 categories: [Project]
-tags: [stock, httr, furrr, crul]
+tags: [r-package, httr, furrr, crul]
 ---
 
 <script src="{{< blogdown/postref >}}index_files/htmlwidgets/htmlwidgets.js"></script>

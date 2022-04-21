@@ -6,7 +6,7 @@ author: Hai Vo
 date: '2021-08-06'
 slug: []
 categories: [Project]
-tags: [stock, httr, furrr, crul]
+tags: [r-package, httr, furrr, crul]
 ---
 ```{r setup, include=FALSE} 
 knitr::opts_chunk$set(cache = TRUE, warning = FALSE, message = FALSE)

@@ -1,0 +1,86 @@
+---
+title: Automate cohort analysis with R
+author: Hai Vo
+date: '2022-04-21'
+slug: automate-cohort-analysis-with-r
+categories: [Project]
+tags: [R-package, data.table]
+subtitle: ''
+description: 'Develop R package to automate cohort analysis with R'
+image: 'img/pattern.jpg'
+---
+
+The goal of `rcohort` is to perform cohort analysis with R. This package build on top of `data.table` hence it should bring good speed!
+
+## Installation
+
+`rcohort` use `data.table` version 1.14.3, which is not available on CRAN yet. Therefore, you need to update `data.table` to the development version first to be able to use `rcohort`.
+You can install the development version of `rcohort` from [GitHub](https://github.com/vohai611/rcohort) with:
+
+``` r
+# install.packages("devtools")
+data.table::update.dev.pkg()
+devtools::install_github("vohai611/rcohort")
+```
+
+## Example
+
+This is a basic example which shows you how to execute cohort analysis with `rcohort`
+
+```{r include=FALSE}
+df = readRDS("online-retail.rds")
+```
+
+This is a typical dataset of an online retailer ([Source](https://archive.ics.uci.edu/ml/datasets/Online+Retail#))
+
+```{r}
+head(df) |>
+  knitr::kable()
+```
+
+`cohort_count()` perform cohort analysis by counting the appearance of customer in each time period. In particular, Customer are grouped by the first time they appear in the dataset. We can choose the rounded time to every  "month", "week", "quarter" or "year". 
+
+```{r example}
+library(rcohort)
+
+df1 = df |>
+  cohort_count(.id_col = CustomerID,
+               .time_col = InvoiceDate,
+               time_unit = "month",
+               percent_form = TRUE)
+head(df1, 5)
+```
+
+To include group of all customer, use `all_group = TRUE`
+
+```{r}
+df2 = df |>
+  cohort_count(.id_col = CustomerID,
+               .time_col = InvoiceDate,
+               time_unit = "month",
+               all_group = TRUE)
+head(df2, 5)
+```
+
+Beside counting the appearance of customers, you can summarise cohort performance over time. For example, we can observe the change of the revenue over time.
+
+
+```{r}
+df$Revenue = df$Quantity * df$UnitPrice
+
+cohort_df = df |> 
+  cohort_summarise(.id_col = CustomerID,
+                   .time_col = InvoiceDate,
+                  .summarise_col = Revenue,.fn = "sum", time_unit = "month",
+                  percent_form = TRUE) 
+
+head(cohort_df,10) |>
+  knitr::kable()
+```
+
+We can also quickly visualize cohort data by calling `auto_plot()`
+
+```{r fig.width=8}
+cohort_df |> auto_plot("tile")
+```
+

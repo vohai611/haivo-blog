@@ -1,0 +1,50 @@
+---
+title: Scraping data from Vietnam general statistic organization
+author: Hai Vo
+date: '2022-04-21'
+slug: scraping-data-from-vietnam-general-statistic-organization
+categories: [Project]
+tags: [rvest, R-package]
+subtitle: ''
+description: "Build a simple package that enable user to access data from gso.gov.vn from R"
+image: 'img/star-light.jpg'
+---
+```{r setup, echo=FALSE}
+knitr::opts_chunk$set(message=FALSE, warning=FALSE)
+```
+
+
+The goal of gsovn is to scrape dataset from gso.gov.vn ([Vietnam General statistic organization](https://gso.gov.vn))
+
+## Installation
+
+This package available through [github](https://github.com/vohai611/gsovn). You can install it via
+
+```r
+# install.packages("devtools")
+devtools::install_github("vohai611/gsovn")
+```
+
+## Usage
+
+You can check what dataset is now on gso.gov.vn using `{gso_avail()}`. There are two options for data retrieved: data in Vietnamese (vi) or English (en). You can also search for the term in title with `search_term=`
+
+```{r}
+df = gsovn::gso_avail(lang = "vi", search_term = "giao duc")
+df
+```
+
+To access the data. Use `gso_read()` on the corresponding the link from `gso_avail()`
+
+```{r}
+education = df$link[1] |>
+  gsovn::gso_read()
+
+education$data |>
+  head(10) |>
+  knitr::kable()
+```
+
+## TODO
+
+This version of `gso_read()` use `rvest::html_table()` under the hood, this function work fine but I might be slow if you queries a large data set, this function work fine but I might be slow if you queries a large data set. I will implement function to download csv data in the future.

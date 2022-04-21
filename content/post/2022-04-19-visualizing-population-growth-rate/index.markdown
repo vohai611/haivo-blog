@@ -7,8 +7,6 @@ categories: [Viz]
 tags:
 subtitle: ''
 description: 'Visulizing population growth rate using half-eye plot'
-image: ''
-draft: true
 ---
 
 
@@ -16,7 +14,7 @@ draft: true
 ## Get the data
 
 Data came from [Vietnam general statistic organization](https://gso.gov.vn)
-To be able to easily get the data from R. I build a simple package [`gsovn`](https://github.com/vohai611/gsovn) to scrape data from their website.
+To be able to easily access the data from R. I build a simple package [`gsovn`](https://github.com/vohai611/gsovn) to scrape data from website.
 
 
 ```r
@@ -46,7 +44,7 @@ This dataset contain data of population growth (by percent) in Vietnam. The data
 
 ## Cleaning
 
-First I need to remove white space from province/city name.
+First I need to remove white space from provinces/cities name.
 
 
 ```r
@@ -55,7 +53,7 @@ df = df %>% rename(region =1) %>%
   mutate(region = str_squish(region))
 ```
 
-Next I split up province/city by region it belong to.
+Next I split up provinces/cites by region it belong to.
 
 
 ```r
@@ -80,7 +78,7 @@ df = df %>%
   ungroup()
 ```
 
-Then pivoting data to long format
+Then pivoting data to the long format
 
 
 ```r
@@ -103,7 +101,7 @@ head(df_long,5) %>%
 
 ## Prepare data for visualization
 
-I want the audience know which province/city belong to which region, so first, I need the map data of Vietnam split by regions. This is quite common task for me, so I saved the map to my personal pacakge [`{haitools}`](https://github.com/vohai611/haitools), and load from it when I need.
+I want the audience know which provinces/cities belong to which region, so, I need the map data of Vietnam split by regions. This is quite common task for me, hence I saved the map to my personal package [`{haitools}`](https://github.com/vohai611/haitools). Save data this way allow me to load it even when I am not working on my computer.
 
 
 ```r
@@ -125,7 +123,7 @@ coord_y = map_dbl(a,2)
 vn_sf = vn_sf %>% mutate(coord_x = coord_x, coord_y = coord_y)
 ```
 
-Viet nam map by region 
+Vietnam map by region 
 
 
 ```r
@@ -145,7 +143,7 @@ p1
 
 <img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-6-1.png" width="1152" />
 
-Next, I visualizing the distribution of growth rate for each region. There are a interesting package `{ggdist}` which draw half-eye plot for distribution, compare with the typical boxplot or violin-plot. 
+Next, I visualizing the distribution of growth rate for each region. There are a interesting package `{ggdist}` which draw half-eye plot for distribution, compare with the typical box-plot or violin-plot. 
 
 
 ```r
@@ -193,7 +191,7 @@ p2 = df_by_group %>%
         strip.background = element_rect(fill = "#9eba89"),
         strip.text = element_text(colour = "#2d3443", size = 18),
         #plot.background = element_rect(fill = "grey80"),
-        #panel.background = element_rect(fill ="grey80"),
+        #panel.background = (fill ="grey80"),
         text = element_text(size= 18)) +
   labs(
     y = NULL,
@@ -218,14 +216,12 @@ p = p1 + p2 +
                   *Dash-line* is the average of whole country",
     theme = theme(
       plot.title = element_markdown(size = 22),
-      plot.subtitle = element_markdown(size = 18),
-      plot.background = element_rect(fill = "grey80"),
+      plot.subtitle = element_markdown(size = 18)
     )
   )
 ```
 
-
-To save out images, use `ggsave()`
+To save the images, use `ggsave()`
 
 
 
