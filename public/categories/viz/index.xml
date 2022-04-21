@@ -9,20 +9,20 @@
     <lastBuildDate>Tue, 19 Apr 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://haingocvo.netlify.app/categories/viz/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Visualizing population growth rate</title>
-      <link>https://haingocvo.netlify.app/post/2022-04-19-visualizing-population-growth-rate/</link>
+      <link>https://haingocvo.netlify.app/2022/04/19/visualizing-population-growth-rate/</link>
       <pubDate>Tue, 19 Apr 2022 00:00:00 +0000</pubDate>
       
-      <guid>https://haingocvo.netlify.app/post/2022-04-19-visualizing-population-growth-rate/</guid>
+      <guid>https://haingocvo.netlify.app/2022/04/19/visualizing-population-growth-rate/</guid>
       <description>Get the data Data came from Vietnam general statistic organization To be able to easily get the data from R. I build a simple package gsovn to scrape data from their website.
 library(tidyverse) ## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ── ## ✓ ggplot2 3.3.5 ✓ purrr 0.3.4 ## ✓ tibble 3.1.6 ✓ dplyr 1.0.8 ## ✓ tidyr 1.2.0 ✓ stringr 1.4.0 ## ✓ readr 2.1.2 ✓ forcats 0.5.1 ## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ── ## x dplyr::filter() masks stats::filter() ## x dplyr::lag() masks stats::lag() data = gsovn::gso_read(gsovn::avail_dataset$link[30]) clean df = data$data df = df %&amp;gt;% rename(region =1) %&amp;gt;%  mutate(region= str_squish(region)) region = c(  &amp;#34;WHOLE COUNTRY&amp;#34;,  &amp;#34;Northern midlands and mountain areas&amp;#34;,  &amp;#34;Red River Delta&amp;#34;,  &amp;#34;Northern Central area and Central coastal area&amp;#34;,  &amp;#34;Central Highlands&amp;#34;,  &amp;#34;South East&amp;#34;,  &amp;#34;Mekong River Delta&amp;#34; )   region_regex = paste0(&amp;#34;(&amp;#34;,str_c(region, collapse = &amp;#34;|&amp;#34;),&amp;#34;)&amp;#34;)  df = df %&amp;gt;%  mutate(across(-region, as.</description>
     </item>
     
     <item>
       <title>Vietnam statistic dashboard with R</title>
-      <link>https://haingocvo.netlify.app/post/2021-08-06-vietnam-statistic-dashboard-with-r/</link>
+      <link>https://haingocvo.netlify.app/2021/08/06/vietnam-statistic-dashboard-with-r/</link>
       <pubDate>Fri, 06 Aug 2021 00:00:00 +0000</pubDate>
       
-      <guid>https://haingocvo.netlify.app/post/2021-08-06-vietnam-statistic-dashboard-with-r/</guid>
+      <guid>https://haingocvo.netlify.app/2021/08/06/vietnam-statistic-dashboard-with-r/</guid>
       <description>Cleanning, visualizing Vietnamese statistic data</description>
     </item>
     

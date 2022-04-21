@@ -1,8 +1,7 @@
 ---
 title: An R package to retrieve Vietnam stock data
 summary: Make API request to get stock data from vndirect.com.vn and cafef.vn
-cover:
-  image: "cover.jpg"
+image: "img/vnstockr.jpg"
 author: Hai Vo
 date: '2021-08-06'
 slug: []
@@ -21,16 +20,23 @@ tags: [stock, httr, furrr, crul]
 
 ## Update 10-2021
 
-I just update the function `get_cefeF2()` which using async request (from {crul} package). The new function seem to be twice as fast compare with the old `get_cafeF()`.
+I just update the function `get_cefeF2()` which using async request (from `{crul}` package). The new function seem to be way faster compare with the old `get_cafeF()`.
 
 ``` r
-system.time(
-  vnstockr::get_cafeF2("ACB", "1/1/2020", "1/1/2021")
-)
+# New
+system.time(vnstockr::get_cafeF2("ACB", "1/1/2020", "1/1/2021"))
 ```
 
     ##    user  system elapsed 
-    ##   0.881   0.020  13.654
+    ##   0.976   0.060   1.548
+
+``` r
+# Old
+system.time(vnstockr::get_cafeF("ACB", "1/1/2020", "1/1/2021"))
+```
+
+    ##    user  system elapsed 
+    ##   0.826   0.075  12.293
 
 ## Why
 

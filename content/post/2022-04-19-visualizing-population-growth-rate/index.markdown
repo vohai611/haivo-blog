@@ -21,26 +21,6 @@ To be able to easily get the data from R. I build a simple package [`gsovn`](htt
 
 ```r
 library(tidyverse)
-```
-
-```
-## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──
-```
-
-```
-## ✓ ggplot2 3.3.5     ✓ purrr   0.3.4
-## ✓ tibble  3.1.6     ✓ dplyr   1.0.8
-## ✓ tidyr   1.2.0     ✓ stringr 1.4.0
-## ✓ readr   2.1.2     ✓ forcats 0.5.1
-```
-
-```
-## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-## x dplyr::filter() masks stats::filter()
-## x dplyr::lag()    masks stats::lag()
-```
-
-```r
 data = gsovn::gso_read(gsovn::avail_dataset$link[30])
 ```
 
@@ -85,13 +65,6 @@ df_long = df %>%
 
 ```r
 library(sf)
-```
-
-```
-## Linking to GEOS 3.8.0, GDAL 3.0.4, PROJ 6.3.1; sf_use_s2() is TRUE
-```
-
-```r
 library(ggrepel)
 theme_set(theme_light())
 vn_sf = haitools::small_vnsf
@@ -111,7 +84,6 @@ vn_sf = vn_sf %>% mutate(coord_x = coord_x, coord_y = coord_y)
 
 
 How to use fct_reorder2(.f, .x, .y, .fun)
-```{r}How to use fct_reorder2(.f, .x, .y, .fun)
 
 ```r
 df_long %>% 
@@ -124,11 +96,6 @@ df_long %>%
   ggplot(aes(year, mean, color = group, group = group))+
   geom_point()+
   geom_line()
-```
-
-```
-## `summarise()` has grouped output by 'group'. You can override using the
-## `.groups` argument.
 ```
 
 <img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-5-1.png" width="1152" />

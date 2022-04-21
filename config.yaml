@@ -18,21 +18,6 @@ params:
   SEOTitle: Haivo 
   about_me: yes
   addtional_menus:
-  algolia:
-    params:
-      - categories
-      - tags
-    vars:
-      - title
-      - summary
-      - date
-      - publishdate
-      - expirydate
-      - permalink
-  algolia_apiKey: ''
-  algolia_appId: ''
-  algolia_indexName: ''
-  algolia_search: false
   ba_track_id: ''
   bookmark_link:
   bookmarks: no
@@ -52,11 +37,11 @@ params:
   #reward: yes
   sidebar_about_description: Contact Me
   sidebar_avatar: 
-  slogan: Coding, all and all again!
+  slogan: 
   social:
     email: haingocvo96@gmail.com
     github: https://github.com/vohai611
-    linkedin: https://www.linkedin.com/in/yourlinkedinid
+    linkedin: https://www.linkedin.com/in/hai-vo-434a85220/ 
   title_404: Not Found :(
   twikoo_env_id: ''
 outputFormats:
@@ -65,9 +50,11 @@ outputFormats:
     isPlainText: yes
     mediaType: application/json
     notAlternative: yes
+permalinks:
+  post: "/:year/:month/:day/:slug/"
 markup:
   highlight:
-    style: dracula
+    style: nord
   tableOfContents:
     endLevel: 2
     startLevel: 1

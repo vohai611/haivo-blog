@@ -9,10 +9,10 @@
     <lastBuildDate>Fri, 06 Aug 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://haingocvo.netlify.app/tags/furrr/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>An R package to retrieve Vietnam stock data</title>
-      <link>https://haingocvo.netlify.app/post/2021-08-06-retrieve-vnstock/</link>
+      <link>https://haingocvo.netlify.app/2021/08/06/an-r-package-to-retrieve-vietnam-stock-data/</link>
       <pubDate>Fri, 06 Aug 2021 00:00:00 +0000</pubDate>
       
-      <guid>https://haingocvo.netlify.app/post/2021-08-06-retrieve-vnstock/</guid>
+      <guid>https://haingocvo.netlify.app/2021/08/06/an-r-package-to-retrieve-vietnam-stock-data/</guid>
       <description>Make API request to get stock data from vndirect.com.vn and cafef.vn</description>
     </item>
     

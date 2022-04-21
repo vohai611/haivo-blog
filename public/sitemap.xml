@@ -11,7 +11,7 @@
     <loc>https://haingocvo.netlify.app/post/</loc>
     <lastmod>2022-04-19T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://haingocvo.netlify.app/post/2022-04-19-visualizing-population-growth-rate/</loc>
+    <loc>https://haingocvo.netlify.app/2022/04/19/visualizing-population-growth-rate/</loc>
     <lastmod>2022-04-19T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://haingocvo.netlify.app/categories/viz/</loc>
@@ -26,7 +26,7 @@
     <loc>https://haingocvo.netlify.app/categories/project/</loc>
     <lastmod>2021-09-26T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://haingocvo.netlify.app/post/2021-09-26-schedule-optimize-app-by-r-shiny/</loc>
+    <loc>https://haingocvo.netlify.app/2021/09/26/schedule-optimize-app-by-r-shiny/</loc>
     <lastmod>2021-09-26T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://haingocvo.netlify.app/tags/shiny/</loc>
@@ -35,7 +35,7 @@
     <loc>https://haingocvo.netlify.app/tags/</loc>
     <lastmod>2021-09-26T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://haingocvo.netlify.app/post/2021-08-06-retrieve-vnstock/</loc>
+    <loc>https://haingocvo.netlify.app/2021/08/06/an-r-package-to-retrieve-vietnam-stock-data/</loc>
     <lastmod>2021-08-06T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://haingocvo.netlify.app/tags/api/</loc>
@@ -50,13 +50,13 @@
     <loc>https://haingocvo.netlify.app/tags/httr/</loc>
     <lastmod>2021-08-06T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://haingocvo.netlify.app/post/2021-08-06-diem-thi-thpt/</loc>
+    <loc>https://haingocvo.netlify.app/2021/08/06/scrape-university-entrance-exam-score/</loc>
     <lastmod>2021-08-06T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://haingocvo.netlify.app/tags/stock/</loc>
     <lastmod>2021-08-06T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://haingocvo.netlify.app/post/2021-08-06-vietnam-statistic-dashboard-with-r/</loc>
+    <loc>https://haingocvo.netlify.app/2021/08/06/vietnam-statistic-dashboard-with-r/</loc>
     <lastmod>2021-08-06T00:00:00+00:00</lastmod>
   </url>
 </urlset>

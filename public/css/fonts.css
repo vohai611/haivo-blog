@@ -11,11 +11,17 @@
        url('../fonts/raleway-v26-vietnamese_latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */
        url('../fonts/raleway-v26-vietnamese_latin-regular.svg#Raleway') format('svg'); /* Legacy iOS */
 }
+
 body {
   font-family: 'Raleway', monospace;
+  font-size: 30px;
 }
 
 
-h1,h2,h3,code {
-  font-family: 'Raleway', sans-serif;
+h1,h2,h3 {
+  font-family: 'Raleway', monospace;
+}
+
+code {
+  font-size: 20;
 }

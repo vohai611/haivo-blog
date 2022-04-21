@@ -11,7 +11,7 @@ image: ''
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, warning = FALSE, dev = "ragg_png", retina = 2, fig.width = 12, fig.height = 7)
+knitr::opts_chunk$set(echo = TRUE,message = FALSE, warning = FALSE, dev = "ragg_png", retina = 2, fig.width = 12, fig.height = 7)
 ```
 
 ## Get the data
@@ -84,7 +84,6 @@ vn_sf = vn_sf %>% mutate(coord_x = coord_x, coord_y = coord_y)
 
 
 How to use fct_reorder2(.f, .x, .y, .fun)
-```{r}How to use fct_reorder2(.f, .x, .y, .fun)
 ```{r}
 df_long %>% 
   filter(!region %in% .env$region[-1]) %>% 
