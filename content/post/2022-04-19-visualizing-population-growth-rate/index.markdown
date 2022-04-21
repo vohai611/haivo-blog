@@ -8,6 +8,7 @@ tags:
 subtitle: ''
 description: 'Visulizing population growth rate using half-eye plot'
 image: ''
+draft: true
 ---
 
 
