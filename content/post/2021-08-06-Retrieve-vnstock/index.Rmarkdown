@@ -16,7 +16,7 @@ knitr::opts_chunk$set(cache = TRUE, warning = FALSE, message = FALSE)
 
 I just update the function `get_cefeF2()` which using async request (from `{crul}` package). The new function seem to be way faster compare with the old `get_cafeF()`.
 
-```{r, cache=TRUE}
+```{r, cache=TRUE, collapse=TRUE}
 # New
 system.time(vnstockr::get_cafeF2("ACB", "1/1/2020", "1/1/2021"))
 # Old

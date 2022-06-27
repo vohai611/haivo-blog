@@ -25,18 +25,13 @@ I just update the function `get_cefeF2()` which using async request (from `{crul
 ``` r
 # New
 system.time(vnstockr::get_cafeF2("ACB", "1/1/2020", "1/1/2021"))
-```
-
-    ##    user  system elapsed 
-    ##   0.976   0.060   1.548
-
-``` r
+##    user  system elapsed 
+##   1.246   0.013   1.832
 # Old
 system.time(vnstockr::get_cafeF("ACB", "1/1/2020", "1/1/2021"))
+##    user  system elapsed 
+##   1.162   0.146  14.703
 ```
-
-    ##    user  system elapsed 
-    ##   0.826   0.075  12.293
 
 ## Why
 
